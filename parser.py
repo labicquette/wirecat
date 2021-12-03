@@ -1,54 +1,62 @@
 import pandas as pd
 import string
 
-df = pd.read_csv("trame1.txt", sep='\s+',index_col=0, skip_blank_lines=True, header=None, dtype=str, comment='#')
-
-#for i in df:
-#    print(df[][i])
-#print(df)
+userFile = 'tramedns.txt'
 hexa = "0123456789abcdef"
 hexa = set(hexa)
-f = open('trame1.txt')
-
-
+f = open(userFile)
+cptLine = 0
+cptOffset = 0
+  
 arrayBytes = []
 arrayFile = []
+
 for line in f:
+    cptLine += 1
     arrayBytes = line.split(" ")
     offset = arrayBytes[0]
     ByteEOL= arrayBytes[len(arrayBytes) - 1]
-
-    print(arrayBytes)
-    for byte in range(1, len(arrayBytes)):
+    #print("ver1",arrayBytes)
+    #filtrage de commentaires dans les trames
+    for byte in range(1, len(arrayBytes)-1):
         #print(arrayBytes[byte])
-        print(arrayBytes[byte])
         tailleByte = len(arrayBytes[byte])
         if tailleByte > 2 :
 
             if arrayBytes[byte][2] == "#":
-                arrayBytes[byte] = arrayBytes[byte][0] + arrayBytes[byte][1]
+                arrayBytes[byte] = arrayBytes[0] + arrayBytes[1]
+                arrayBytes = arrayBytes[:byte + 1]
+                break
+            if arrayBytes[byte][0] == "#":
                 arrayBytes = arrayBytes[:byte]
                 break
-        
-        else :
-            if(arrayBytes[byte][0] == "#"):
-                arrayBytes = arrayBytes[:byte]
-                break
 
-    #ByteEOL 
+    if len(ByteEOL) == 3 :
+        arrayBytes.append(ByteEOL[0]+ByteEOL[1])
+    arrayBytes = list(filter(lambda x : x != '', arrayBytes))
+    filteredBytes = list(filter(lambda x : len(x) == 2 , arrayBytes))
+    
+    if len(filteredBytes) < len(arrayBytes) - 2:
+        print("File", userFile,", line",cptLine)
+        break
+    
 
-    filteredBytes = list(filter(lambda x : len(x) == 2, arrayBytes))
-    #filteredBytes.append()
+    if cptOffset != int(offset,16):
+        print("Erreur numero Offset")
+        print(line)
+        break
+    else :
+        cptOffset += len(filteredBytes)
 
 
-    #if len(filteredBytes) + 1
+
     if len(arrayBytes[0]) == 4 :
         filteredBytes = [arrayBytes[0],filteredBytes]
     else :
-        arrayBytes = []    
+        arrayBytes = []   
+    if filteredBytes != []:
+        arrayFile.append(filteredBytes) 
        
-    if arrayBytes != []:
-        arrayFile.append(arrayBytes)
 for i in arrayFile:
     print(i)
 f.close()
