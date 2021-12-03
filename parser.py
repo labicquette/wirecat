@@ -1,62 +1,66 @@
-import pandas as pd
-import string
 
-userFile = 'tramedns.txt'
-hexa = "0123456789abcdef"
-hexa = set(hexa)
-f = open(userFile)
-cptLine = 0
-cptOffset = 0
-  
-arrayBytes = []
-arrayFile = []
+def parser(file):
+    f = open(file)
+    cptLine = 0
+    cptOffset = 0
+    cptTrames = -1
 
-for line in f:
-    cptLine += 1
-    arrayBytes = line.split(" ")
-    offset = arrayBytes[0]
-    ByteEOL= arrayBytes[len(arrayBytes) - 1]
-    #print("ver1",arrayBytes)
-    #filtrage de commentaires dans les trames
-    for byte in range(1, len(arrayBytes)-1):
-        #print(arrayBytes[byte])
-        tailleByte = len(arrayBytes[byte])
-        if tailleByte > 2 :
+    arrayBytes = []
+    dictFrames = {}
 
-            if arrayBytes[byte][2] == "#":
-                arrayBytes[byte] = arrayBytes[0] + arrayBytes[1]
-                arrayBytes = arrayBytes[:byte + 1]
-                break
-            if arrayBytes[byte][0] == "#":
-                arrayBytes = arrayBytes[:byte]
-                break
+    for line in f:
+        cptLine += 1
+        arrayBytes = line.split(" ")
+        offset = arrayBytes[0]
+        ByteEOL= arrayBytes[len(arrayBytes) - 1]
 
-    if len(ByteEOL) == 3 :
-        arrayBytes.append(ByteEOL[0]+ByteEOL[1])
-    arrayBytes = list(filter(lambda x : x != '', arrayBytes))
-    filteredBytes = list(filter(lambda x : len(x) == 2 , arrayBytes))
+        #filtrage de commentaires dans les trames
+        for byte in range(1, len(arrayBytes)-1):
+            tailleByte = len(arrayBytes[byte])
+            if tailleByte > 2 :
+                if arrayBytes[byte][2] == "#":
+                    arrayBytes[byte] = arrayBytes[0] + arrayBytes[1]
+                    arrayBytes = arrayBytes[:byte + 1]
+                    break
+                if arrayBytes[byte][0] == "#":
+                    arrayBytes = arrayBytes[:byte]
+                    break
+        #integration du dernier Byte de la ligne et suppression du caractere fin de ligne
+        if len(ByteEOL) == 3 :
+            arrayBytes.append(ByteEOL[0]+ByteEOL[1])
+        
+        #filtrage des tabulations > 1 espace
+        arrayBytes = list(filter(lambda x : x != '', arrayBytes))
+        #filtrage des bytes avec len(x) != 2
+        filteredBytes = list(filter(lambda x : len(x) == 2 , arrayBytes))
+
+        # verification du bon nombre de bytes     
+        if len(filteredBytes) < len(arrayBytes) - 2:
+            print("File", file,", line",cptLine)
+            break
     
-    if len(filteredBytes) < len(arrayBytes) - 2:
-        print("File", userFile,", line",cptLine)
-        break
-    
-
-    if cptOffset != int(offset,16):
-        print("Erreur numero Offset")
-        print(line)
-        break
-    else :
-        cptOffset += len(filteredBytes)
+        #verification nb bytes = offset 
+        if cptOffset != int(offset,16):
+            print("Erreur numero Offset")
+            print(line)
+            break
+        else :
+            cptOffset += len(filteredBytes)
 
 
-
-    if len(arrayBytes[0]) == 4 :
-        filteredBytes = [arrayBytes[0],filteredBytes]
-    else :
-        arrayBytes = []   
-    if filteredBytes != []:
-        arrayFile.append(filteredBytes) 
+        #ajout de l'offset 
+        if len(arrayBytes[0]) == 4 :
+            #filteredBytes = [arrayBytes[0],filteredBytes]
+            if arrayBytes[0] == "0000":
+                cptTrames += 1
+                dictFrames[cptTrames] = []
+        else :
+            arrayBytes = []   
+        if filteredBytes != []:
+            dictFrames[cptTrames] += filteredBytes
        
-for i in arrayFile:
-    print(i)
-f.close()
+    for i in dictFrames:
+        print(i)
+    f.close()
+
+    return dictFrames
