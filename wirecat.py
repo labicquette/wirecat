@@ -1,4 +1,5 @@
 from parser import *
+import graphics
 import time 
 timer = time.process_time()
 file = "tramedns.txt"
