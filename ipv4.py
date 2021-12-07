@@ -1,0 +1,2 @@
+
+#def analyser(dictTrame, arrayBytes=[]):

@@ -1,6 +1,5 @@
 
-def parser(file):
-    f = open(file)
+def parser(f):
     cptLine = 0
     cptOffset = 0
     cptTrames = -1
@@ -36,10 +35,12 @@ def parser(file):
 
         # verification du bon nombre de bytes     
         if len(filteredBytes) < len(arrayBytes) - 2:
-            print("File", file,", line",cptLine)
+            print("File", f.name,", line",cptLine)
             break
     
         #verification nb bytes = offset 
+        print(cptOffset)
+        print(offset)
         if cptOffset != int(offset,16):
             print("Erreur numero Offset")
             print(line)
@@ -58,9 +59,7 @@ def parser(file):
             arrayBytes = []   
         if filteredBytes != []:
             dictFrames[cptTrames] += filteredBytes
-       
-    for i in dictFrames:
-        print(i)
+
     f.close()
 
     return dictFrames
