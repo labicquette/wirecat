@@ -16,7 +16,7 @@ def analyser(dictTrame, arrayBytes=[]):
     dictInfos['Source'] = mac2
     if Type in supportedProtocols:
         dictInfos['Type'] = Type
-        dictTrame[Type] = protocols(Type, dictTrame, arrayBytes)
+        dictInfos[Type] = protocols(Type, dictTrame, arrayBytes)
     else :
         dictInfos['Type'] = Type + " Protocol not supported"
     
@@ -28,4 +28,3 @@ def protocols(protocol, dictTrame, arrayBytes):
     if protocol == "0800":
         return ipv4.analyser(dictTrame, 14, arrayBytes)
         
-

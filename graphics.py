@@ -58,10 +58,8 @@ def noGUI(file=[]):
             print(protocols.decoder(parsedFile))
 
 def dictToTree(Treedata, dictChamps, parentname):
-    print(dictChamps)
     for i in dictChamps.keys():
         if type(dictChamps[i]) == dict:
-            print("ce qui est cense etre le bon dico",dictChamps[i])
             Treedata.Insert(parentname, parentname +  str(i), str(i) ,values = [], icon = None)
             dictToTree(Treedata, dictChamps[i], parentname+ str(i) )
         else :
