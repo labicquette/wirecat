@@ -4,7 +4,7 @@ import ethernet
 def decoder(dictBytes={}):
     dictInfos = {}
     if dictBytes == {}:
-        return "Trame non valide ou vide"
+        return {"Trame non valide ou vide":""}
     else:
         for trame in dictBytes:
                 dictInfos[trame] = {}

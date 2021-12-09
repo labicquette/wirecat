@@ -35,23 +35,19 @@ def parser(f):
 
         # verification du bon nombre de bytes     
         if len(filteredBytes) < len(arrayBytes) - 2:
-            print("File", f.name,", line",cptLine)
+            #print("File", f.name,", line",cptLine)
+            return {'Erreur' : "Fichier : '"+ f.name + "'  line : " + str(cptLine)}
             break
     
         #verification nb bytes = offset 
-        print(cptOffset)
-        print(offset)
         if cptOffset != int(offset,16):
-            print("Erreur numero Offset")
-            print(line)
-            break
+            return {"Erreur": "Offset : " + line}
         else :
             cptOffset += len(filteredBytes)
 
 
         #ajout de l'offset 
         if len(arrayBytes[0]) == 4 :
-            #filteredBytes = [arrayBytes[0],filteredBytes]
             if arrayBytes[0] == "0000":
                 cptTrames += 1
                 dictFrames[cptTrames] = []

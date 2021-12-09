@@ -6,8 +6,11 @@ def analyser(dictTrame, arrayBytes=[]):
     mac1 = ''
     mac2 = ''
     for i in range(0, 6):
-        mac1 += arrayBytes[i]
+        mac1 += arrayBytes[i] 
         mac2 += arrayBytes[i+6]
+        if i != 5 :
+            mac1 += ":"
+            mac2 += ":"
     Type = arrayBytes[12] + arrayBytes[13] 
     dictInfos['Destination'] = mac1
     dictInfos['Source'] = mac2
@@ -23,6 +26,6 @@ def analyser(dictTrame, arrayBytes=[]):
 def protocols(protocol, dictTrame, arrayBytes):
 
     if protocol == "0800":
-        return ipv4.analyser(dictTrame, arrayBytes)
+        return ipv4.analyser(dictTrame, 14, arrayBytes)
         
 

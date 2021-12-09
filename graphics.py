@@ -6,14 +6,14 @@ import protocols
 def GUI(file=[]):
     sg.theme('DarkAmber')    # Keep things interesting for your users
 
-
-
-
-
-    #dictionnaire={"chocolat":{"feves": "saucisse","kebab":{"75 paname" : "de ouf"}}, "fallafel" : "nerguez","grec":"cacao"}
+    treedata = sg.TreeData() 
+   
     if file != []:
-        treedata = sg.TreeData() 
-        dictToTree(treedata, protocols.decoder(parser.parser(file)), '')
+        parsedFile = parser.parser(file)
+        if 'Erreur' in parsedFile:
+            dictToTree(treedata, parsedFile, '')
+        else:
+            dictToTree(treedata, protocols.decoder(parsedFile), '')
 
 
     layout = [[sg.Text('your files')],
@@ -36,7 +36,12 @@ def GUI(file=[]):
         if event == '-FILE-':
             print(values["-FILE-"])
             treedata = sg.TreeData()
-            dictToTree(treedata, protocols.decoder(parser.parser(open(values[event]))), '')
+            parsedFile = parser.parser(open(values[event]))
+            if 'Erreur' in parsedFile:
+                dictToTree(treedata, parsedFile, '')
+            else:
+                dictToTree(treedata, protocols.decoder(parsedFile), '')
+            window['-TREE-'].update(values=treedata)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         print(event, values)
@@ -46,16 +51,21 @@ def noGUI(file=[]):
     if file == []:
         print("problem : no file", file)
     else :
-        print(protocols.decoder(parser.parser(file)))
+        parsedFile = parser.parser(file)
+        if 'Erreur' in parsedFile:
+            print(parsedFile)
+        else:
+            print(protocols.decoder(parsedFile))
 
 def dictToTree(Treedata, dictChamps, parentname):
     print(dictChamps)
     for i in dictChamps.keys():
         if type(dictChamps[i]) == dict:
-            print(i)
+            print("ce qui est cense etre le bon dico",dictChamps[i])
             Treedata.Insert(parentname, parentname +  str(i), str(i) ,values = [], icon = None)
             dictToTree(Treedata, dictChamps[i], parentname+ str(i) )
         else :
             print(i)
             Treedata.Insert(parentname, parentname + str(i), str(i) + ' : ' + dictChamps[i], values = [], icon = None)
 
+#def dictToText(dict, leftSpace):
