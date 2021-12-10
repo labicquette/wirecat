@@ -5,5 +5,6 @@
 ### Requirements :
 
 ```
-- pip install tkinter
+pip install tkinter
 ```
+## And done everything works out of the box
