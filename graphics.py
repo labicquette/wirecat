@@ -7,13 +7,15 @@ def GUI(file=[]):
     sg.theme('DarkAmber')    # Keep things interesting for your users
 
     treedata = sg.TreeData() 
-   
+    decodedFile = {}
+
     if file != []:
         parsedFile = parser.parser(file)
         if 'Erreur' in parsedFile:
             dictToTree(treedata, parsedFile, '')
         else:
-            dictToTree(treedata, protocols.decoder(parsedFile), '')
+            decodedFile = protocols.decoder(parsedFile)
+            dictToTree(treedata, decodedFile, '')
 
 
     layout = [[sg.Text('your files')],
@@ -21,8 +23,8 @@ def GUI(file=[]):
                [sg.Tree(data=treedata,
                         headings=[],
                         auto_size_columns=True,
-                        num_rows=20,
-                        col0_width=40,
+                        num_rows=30,
+                        col0_width=100,
                         key='-TREE-',
                     show_expanded=False,
                     enable_events=True),
@@ -40,12 +42,14 @@ def GUI(file=[]):
             if 'Erreur' in parsedFile:
                 dictToTree(treedata, parsedFile, '')
             else:
-                dictToTree(treedata, protocols.decoder(parsedFile), '')
+                decodedFile = protocols.decoder(parsedFile)
+                dictToTree(treedata, decodedFile, '')
             window['-TREE-'].update(values=treedata)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         print(event, values)
     window.close()
+    return decodedFile
 
 def noGUI(file=[]):
     if file == []:
@@ -55,7 +59,10 @@ def noGUI(file=[]):
         if 'Erreur' in parsedFile:
             print(parsedFile)
         else:
-            print(protocols.decoder(parsedFile))
+            decodedFile = protocols.decoder(parsedFile)
+            print(decodedFile)
+            return decodedFile
+
 
 def dictToTree(Treedata, dictChamps, parentname):
     for i in dictChamps.keys():
@@ -63,7 +70,21 @@ def dictToTree(Treedata, dictChamps, parentname):
             Treedata.Insert(parentname, parentname +  str(i), str(i) ,values = [], icon = None)
             dictToTree(Treedata, dictChamps[i], parentname+ str(i) )
         else :
-            print(i)
             Treedata.Insert(parentname, parentname + str(i), str(i) + ' : ' + dictChamps[i], values = [], icon = None)
 
-#def dictToText(dict, leftSpace):
+def dictToText(dictChamps, leftSpace, listChamps=[]):
+    for i in dictChamps.keys():
+        if type(dictChamps[i]) == dict:
+            listChamps.append(leftSpace + str(i) +"\n")
+            dictToText(dictChamps[i], leftSpace + "\t" , listChamps)
+        else :
+            listChamps.append(leftSpace + i + " : " +dictChamps[i]+ "\n")
+
+def fileToTxt(decodedFile):
+    print("fichier",decodedFile)
+    resList = []
+    dictToText(decodedFile, '', resList)
+    print("resultatlist",resList)
+    with open('output.txt', 'w') as f:
+        f.writelines(resList)
+        f.close()
