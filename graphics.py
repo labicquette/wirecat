@@ -4,7 +4,7 @@ import parser
 import protocols
 
 def GUI(file=[]):
-    sg.theme('DarkAmber')    # Keep things interesting for your users
+    sg.theme('DarkAmber') #theme 
 
     treedata = sg.TreeData() 
     decodedFile = {}
@@ -18,7 +18,7 @@ def GUI(file=[]):
             dictToTree(treedata, decodedFile, '')
 
 
-    layout = [[sg.Text('your files')],
+    layout = [[sg.Text('Your file decoded:')],
               [sg.Input(key='-FILE-', visible=False, enable_events=True), sg.FileBrowse()],
                [sg.Tree(data=treedata,
                         headings=[],
@@ -31,7 +31,7 @@ def GUI(file=[]):
                 ],
             [sg.Button('Exit')]]
 
-    window = sg.Window('Wirecat', layout)
+    window = sg.Window('Wirecat', layout, icon="cat.png")
 
     while True:     # Event Loop
         event, values = window.read()
@@ -67,24 +67,22 @@ def noGUI(file=[]):
 def dictToTree(Treedata, dictChamps, parentname):
     for i in dictChamps.keys():
         if type(dictChamps[i]) == dict:
-            Treedata.Insert(parentname, parentname +  str(i), str(i) ,values = [], icon = None)
+            Treedata.Insert(parentname, parentname +  str(i), str(i) + ' :',values = [], icon = None)
             dictToTree(Treedata, dictChamps[i], parentname+ str(i) )
         else :
-            Treedata.Insert(parentname, parentname + str(i), str(i) + ' : ' + dictChamps[i], values = [], icon = None)
+            Treedata.Insert(parentname, parentname + str(i), str(i) + ' : ' + str(dictChamps[i]), values = [], icon = None)
 
 def dictToText(dictChamps, leftSpace, listChamps=[]):
     for i in dictChamps.keys():
         if type(dictChamps[i]) == dict:
-            listChamps.append(leftSpace + str(i) +"\n")
+            listChamps.append(leftSpace + str(i) + " :" +"\n")
             dictToText(dictChamps[i], leftSpace + "\t" , listChamps)
         else :
             listChamps.append(leftSpace + i + " : " +dictChamps[i]+ "\n")
 
 def fileToTxt(decodedFile):
-    print("fichier",decodedFile)
     resList = []
     dictToText(decodedFile, '', resList)
-    print("resultatlist",resList)
     with open('output.txt', 'w') as f:
         f.writelines(resList)
         f.close()

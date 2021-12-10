@@ -1,0 +1,22 @@
+0
+	Destination : 70:fc:8f:50:cf:2a
+	Source : 0c:dd:24:82:65:77
+	Type : IPV4 (0800)
+	0800
+		Version : 4
+		IHL (Internet Header Length) : 5
+		Differentiated Services : Reserved (0)
+		Total Length : 71 (0047)
+		Indentification : 2833
+		Flags :   Reserved : 0 / Don't Fragment (DF): 0 / More Fragments (MF): 0
+		Fragment Offset : 0x0
+		Time To Live (TTL) : 64 (40)
+		Header Checksum : ed27
+		Source IP Adress : 192.168.0.31
+		Destination IP Adress : 192.168.0.254
+		Protocol : UDP (User Datagram Protocol)
+		Protocol data
+			Source port : 55983
+			Destination port : 53
+			Length : 51(0033)
+			Checksum : 82b2

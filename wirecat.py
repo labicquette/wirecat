@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import parser as p
 import graphics
 import sys
@@ -6,8 +7,6 @@ import argparse
 """to do :
     protocols 
     save file ?
-    noGui 
-    get file through gui
 """
 
 
@@ -39,7 +38,7 @@ def main(argv):
             returnValue = graphics.GUI(args.file )
         else :
             returnValue = graphics.GUI()
-            
+
     if args.output:
         if returnValue != []:
             graphics.fileToTxt(returnValue)
