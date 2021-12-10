@@ -33,7 +33,7 @@ def GUI(file=[]):
 
     window = sg.Window('Wirecat', layout, icon="cat.png")
 
-    while True:     # Event Loop
+    while True: # Event Loop
         event, values = window.read()
         if event == '-FILE-':
             print(values["-FILE-"])

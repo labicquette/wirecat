@@ -4,14 +4,6 @@ import graphics
 import sys
 import argparse
 
-"""to do :
-    protocols 
-    save file ?
-"""
-
-
-
-
 def main(argv):
 
     argParser = argparse.ArgumentParser(description='Show frame information')

@@ -35,9 +35,7 @@ def parser(f):
 
         # verification du bon nombre de bytes     
         if len(filteredBytes) < len(arrayBytes) - 2:
-            #print("File", f.name,", line",cptLine)
             return {'Erreur' : "Fichier : '"+ f.name + "'  line : " + str(cptLine)}
-            break
     
         #verification nb bytes = offset 
         if cptOffset != int(offset,16):
